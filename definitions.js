@@ -1,35 +1,34 @@
 /* ///////////////////////////////////////////////////////////////////////////////////////
                                      Definitions    
 /////////////////////////////////////////////////////////////////////////////////////// */
-function initGame(){
-  $(document).ready(function () {
-    $('.game-window').append(canvasElement);
-  });
+function initGame() {
+	$(document).ready(function() {
+		$(".game-window").append(canvasElement);
+	});
 }
-function watchKeyboardInput(){
-  $(document).keydown(function (e) {
-      keys[e.keyCode] = true;
-  });
-  $(document).keyup(function (e) {
-      delete keys[e.keyCode];
-  });
+function watchKeyboardInput() {
+	$(document).keydown(function(e) {
+		keys[e.keyCode] = true;
+	});
+	$(document).keyup(function(e) {
+		delete keys[e.keyCode];
+	});
 }
 
 function clear() {
 	canvas.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 }
-let Pieces = [];
 
 function update() {
-  updatePiece();
-  activePieces.forEach(piece => {
-    piece.update();
-  });
+	updatePiece();
+	activePieces.forEach(piece => {
+    piece.update(); 
+	});
 }
 function draw() {
-  Pieces.forEach(piece => {
-    piece.draw();
-  });
+	Pieces.forEach(piece => {
+		piece.draw();
+	});
 }
 
 function collides(a, b) {
@@ -41,26 +40,26 @@ function collides(a, b) {
 	);
 }
 
-function handleCollisions() {
-}
+function handleCollisions() {}
 
-existActivePiece = false;
 function updatePiece() {
-
-  activePieces = Pieces.filter(piece=>{
-    return piece.isActive();
-  })
-  if(!activePieces.length){
-    existActivePiece = false;
-  }
+	activePieces = Pieces.filter(piece => {
+		return piece.isActive();
+  });
+  
+	if (!activePieces.length) {
+		existActivePiece = false;
+	}
 
 	if (!existActivePiece) {
 		if (Math.floor(Math.random() * 11) < 5) {
-      Pieces.push(new PieceShapeI(40,0));
-      console.log('I');
+		  shape = [[1,1],[1,1]];
+		  Pieces.push(new Piece(40,0,shape));
+		  console.log('O');		
 		} else {
-      Pieces.push(new PieceShapeI(40,0));
-      console.log('I');
+		  shape = [[1,0],[1,0],[1,0],[1,0]];
+		  Pieces.push(new Piece(40,0,shape));
+		  console.log('I');
 		}
 		existActivePiece = true;
 	}

@@ -2,14 +2,16 @@ class Chunk {
 	constructor(x, y, shape) {
 		this.x = x || 0;
 		this.y = y || 0;
-		this.shape = shape || 1;
+		this.shape = shape || [1];
 		this.active = true;
 	}
+
 	getWidth() {
-		return this.shape * CHUNKSIZE;
+		return this.shape.length * CHUNKSIZE;
 	}
+
 	getHeight() {
-		return this.shape * CHUNKSIZE;
+		return this.shape.length * CHUNKSIZE;
 	}
 
 	draw(color) {
@@ -33,14 +35,13 @@ class Piece extends Chunk {
 		super(x, y, shape);
 		this.shape = shape || [[1, 1], [1, 1]];
 	}
+
 	moveDown() {
 		this.y = this.y + SPEED;
 	}
 
 	isActive() {
 		return this.getHeight() + this.y < CANVAS_HEIGHT;
-		//  change to method
-		// colided with floor
 	}
 
 	update() {
@@ -56,18 +57,20 @@ class Piece extends Chunk {
 		return { centerX, centerY };
 	}
 	draw() {
-		let i;
 		let chunks = [];
-		let pushX, pushY;
+
 		this.shape.forEach((rowY, indexY) => {
-			for (i = 0; i < rowY.length; i++) {
-				if (rowY[i] > 0) {
-					pushX = this.x + i * CHUNKSIZE;
-					pushY = this.y + indexY * CHUNKSIZE;
-					chunks.push(new Chunk(pushX, pushY));
+			rowY.forEach((val, indexX) => {
+				if (val == 0) {
+					return;
 				}
-			}
+
+				chunks.push(
+					new Chunk(this.x + indexX * CHUNKSIZE, this.y + indexY * CHUNKSIZE)
+				);
+			});
 		});
+
 		chunks.forEach(chunk => {
 			chunk.draw();
 		});
