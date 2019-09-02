@@ -12,7 +12,29 @@ function watchKeyboardInput() {
 	});
 	$(document).keyup(function(e) {
 		delete keys[e.keyCode];
-	});
+  });  
+}
+
+function movePiece(){
+  for (var direction in keys) {
+    if (!keys.hasOwnProperty(direction)) continue;
+    if (direction == 65) {
+      console.log('A')      
+      activePiece.moveLeft();
+    }
+    if (direction == 87) {
+      console.log('W')      
+    }
+    if (direction == 68) {
+      console.log('D')      
+      activePiece.moveRight();
+    }
+    if (direction == 83) {
+      console.log('S')      
+    }
+    if (direction == 69) {
+    }
+  }
 }
 
 function clear() {
@@ -21,16 +43,16 @@ function clear() {
 
 function update() {
 	updatePiece();
-	activePieces.forEach(piece => {
-    piece.update(); 
-	});
-}
+  activePiece.update(); 
+  movePiece();
+} 
 function draw() {
-	Pieces.forEach(piece => {
-		piece.draw();
-	});
+	floor.forEach(piece => {
+    piece.draw();
+  });  
+  activePiece.draw();
 }
-
+ 
 function collides(a, b) {
 	return (
 		a.x < b.x + b.width &&
@@ -42,25 +64,25 @@ function collides(a, b) {
 
 function handleCollisions() {}
 
+// let activePiece.isActive();
+let existActivePiece = false;
 function updatePiece() {
-	activePieces = Pieces.filter(piece => {
-		return piece.isActive();
-  });
+	
   
-	if (!activePieces.length) {
-		existActivePiece = false;
-	}
-
 	if (!existActivePiece) {
 		if (Math.floor(Math.random() * 11) < 5) {
 		  shape = [[1,1],[1,1]];
-		  Pieces.push(new Piece(40,0,shape));
 		  console.log('O');		
 		} else {
 		  shape = [[1,0],[1,0],[1,0],[1,0]];
-		  Pieces.push(new Piece(40,0,shape));
 		  console.log('I');
-		}
+    }
+    activePiece = new Piece(40,0, shape);
 		existActivePiece = true;
+  }
+
+  if (!activePiece.isActive()) {
+    floor.push(...activePiece.chunks);
+		existActivePiece = false;
 	}
 }

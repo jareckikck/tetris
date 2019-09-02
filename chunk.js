@@ -9,9 +9,10 @@ class Chunk {
 	getWidth() {
 		return this.shape.length * CHUNKSIZE;
 	}
-
+  
 	getHeight() {
-		return this.shape.length * CHUNKSIZE;
+    return this.shape.length * CHUNKSIZE;
+		// return Math.max(this.shape.map(row => row.length)) * CHUNKSIZE;
 	}
 
 	draw(color) {
@@ -29,50 +30,4 @@ class Chunk {
 		}
 	}
 }
-
-class Piece extends Chunk {
-	constructor(x, y, shape) {
-		super(x, y, shape);
-		this.shape = shape || [[1, 1], [1, 1]];
-	}
-
-	moveDown() {
-		this.y = this.y + SPEED;
-	}
-
-	isActive() {
-		return this.getHeight() + this.y < CANVAS_HEIGHT;
-	}
-
-	update() {
-		if (this.isActive()) {
-			this.moveDown();
-		}
-	}
-
-	getCenterPoint() {
-		let centerX, centerY;
-		centerX = (2 * this.x + this.rowsX * CHUNKSIZE) / 2;
-		centerY = (2 * this.y + this.rowsY * CHUNKSIZE) / 2;
-		return { centerX, centerY };
-	}
-	draw() {
-		let chunks = [];
-
-		this.shape.forEach((rowY, indexY) => {
-			rowY.forEach((val, indexX) => {
-				if (val == 0) {
-					return;
-				}
-
-				chunks.push(
-					new Chunk(this.x + indexX * CHUNKSIZE, this.y + indexY * CHUNKSIZE)
-				);
-			});
-		});
-
-		chunks.forEach(chunk => {
-			chunk.draw();
-		});
-	}
-}
+ 
