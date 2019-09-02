@@ -1,23 +1,16 @@
 /* ///////////////////////////////////////////////////////////////////////////////////////
-                                     OnInit    
+                                    GLOBALS    
 /////////////////////////////////////////////////////////////////////////////////////// */
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-//game init
-var CANVAS_WIDTH = 200;
-var CANVAS_HEIGHT = 400;
+const CANVAS_WIDTH = 200;
+const CANVAS_HEIGHT = 400;
 const CHUNKSIZE = 20;
+const FPS = 60;
+const SPEED = 1;
 
-var FPS = 60;
-var SPEED = 1;
-var keys = {}
-
+let keys = {}
+let Pieces = [];
 let canvasElement = $("<canvas width='" + CANVAS_WIDTH +"' height='" + CANVAS_HEIGHT + "'></canvas");
 let canvas = canvasElement.get(0).getContext("2d");
-
-
-
 
 /* ///////////////////////////////////////////////////////////////////////////////////////
                                      RunIt    
