@@ -4,19 +4,35 @@ class Piece extends Chunk {
     this.shape = shape || [[1, 1], [1, 1]];
     this.chunks;
   }
+  getWidth() {
+    let width = 0;
+    let current = 0;
+    this.shape.forEach( el => {
+      el.forEach( v => {
+        if (v == 0) return;
+        current++;
+      });
+      if (current < width) return;
+      width = current;
+      current = 0;
+    });
 
-  moveDown() {
+    return width * CHUNKSIZE;
+  }
+  fallDown() {
     this.y = this.y + (CHUNKSIZE / FPS) * SPEED;
   }
 
+  moveDown() {
+    this.y = this.y + (CHUNKSIZE / FPS) * 10;
+  }
   moveRight() {
-    console.log(this.getWidth());
-    this.x = this.x <= CANVAS_WIDTH - this.getWidth() ? (this.x += 5) : this.x;
+    this.x =
+      this.x < CANVAS_WIDTH - this.getWidth() ? (this.x += CHUNKSIZE) : this.x;
   }
 
   moveLeft() {
-    console.log(this.x);
-    this.x = this.x >= 0 ? (this.x -= 5) : this.x;
+    this.x = this.x >= CHUNKSIZE ? (this.x -= CHUNKSIZE) : this.x;
   }
 
   isActive() {
@@ -25,7 +41,7 @@ class Piece extends Chunk {
 
   update() {
     if (this.isActive()) {
-      this.moveDown();
+      this.fallDown();
     }
   }
 

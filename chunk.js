@@ -6,15 +6,12 @@ class Chunk {
     this.active = true;
   }
 
-  getWidth() {
-    //TO DO
-    // width find array row with biggest number of 1's
+  getWidth() {    
     return this.shape.length * CHUNKSIZE;
   }
 
   getHeight() {
-    return this.shape.length * CHUNKSIZE;
-    // return Math.max(this.shape.map(row => row.length)) * CHUNKSIZE;
+    return this.shape.length * CHUNKSIZE;    
   }
 
   draw(color) {

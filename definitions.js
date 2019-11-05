@@ -1,6 +1,16 @@
 /* ///////////////////////////////////////////////////////////////////////////////////////
                                      Definitions    
 /////////////////////////////////////////////////////////////////////////////////////// */
+const SHAPES = {
+  Oshape: [[1, 1], [1, 1]],
+  Ishape: [[1], [1], [1], [1]],
+  Tshape: [[0, 1, 0], [1, 1, 1]],
+  Zshape: [[1, 1], [0, 1, 1]],
+  Sshape: [[0, 1, 1], [1, 1]],
+  Lshape: [[1], [1], [1, 1]],
+  Jshape: [[0, 1], [0, 1], [1, 1]]
+};
+
 function initGame() {
   $(document).ready(function() {
     $(".game-window").append(canvasElement);
@@ -12,6 +22,7 @@ function watchKeyboardInput() {
   });
   $(document).keyup(function(e) {
     delete keys[e.keyCode];
+    repeat = false;
   });
 }
 
@@ -19,18 +30,25 @@ function movePiece() {
   for (var direction in keys) {
     if (!keys.hasOwnProperty(direction)) continue;
     if (direction == 65) {
-      console.log("A");
-      activePiece.moveLeft();
+      if (!repeat) {
+        repeat = true;
+        console.log("A");
+        activePiece.moveLeft();
+      }
     }
     if (direction == 87) {
       console.log("W");
     }
     if (direction == 68) {
       console.log("D");
-      activePiece.moveRight();
+      if (!repeat) {
+        repeat = true;
+        activePiece.moveRight();
+      }
     }
     if (direction == 83) {
       console.log("S");
+      activePiece.moveDown();
     }
     if (direction == 69) {
     }
@@ -64,18 +82,19 @@ function collides(a, b) {
 
 function handleCollisions() {}
 
-// let activePiece.isActive();
+function spawnNextPiece() {
+  if (Math.floor(Math.random() * 11) < 5) {
+    shape = SHAPES.Lshape;
+  } else {
+    shape = SHAPES.Jshape;
+  }
+  return shape;
+}
+
 let existActivePiece = false;
 function updatePiece() {
   if (!existActivePiece) {
-    if (Math.floor(Math.random() * 11) < 5) {
-      shape = [[1, 1], [1, 1]];
-      console.log("O");
-    } else {
-      shape = [[1, 0], [1, 0], [1, 0], [1, 0]];
-      console.log("I");
-    }
-    activePiece = new Piece(40, 0, shape);
+    activePiece = new Piece(40, 0, spawnNextPiece());
     existActivePiece = true;
   }
 
