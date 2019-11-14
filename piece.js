@@ -1,14 +1,17 @@
 class Piece extends Chunk {
   constructor(x, y, shape) {
     super(x, y, shape);
-    this.shape = shape || [[1, 1], [1, 1]];
+    this.shape = shape || [
+      [1, 1],
+      [1, 1]
+    ];
     this.chunks;
   }
   getWidth() {
     let width = 0;
     let current = 0;
-    this.shape.forEach( el => {
-      el.forEach( v => {
+    this.shape.forEach(el => {
+      el.forEach(v => {
         if (v == 0) return;
         current++;
       });
@@ -16,40 +19,78 @@ class Piece extends Chunk {
       width = current;
       current = 0;
     });
-
-    return width * CHUNKSIZE;
-  }
-  fallDown() {
-    this.y = this.y + (CHUNKSIZE / FPS) * SPEED;
+    return width;
   }
 
+  canMoveDown() {
+    let canMove = true;
+    if (this.y == board.rows - this.shape.length) {
+      return false;
+    }
+
+    let bottomY = this.y + this.shape.length;
+    for (let i = 0; i < this.shape.length; i++) {
+      let bottomX = this.x + i;
+      if (board.body[bottomY][bottomX] == 1) {
+        canMove = false;
+      }
+    }
+    return canMove;
+	}
+	rotate(){
+		let newShape = []
+		for(let x = 0; x < this.getWidth(); x++){
+			let row = []
+			for(let y = 0; y < this.shape.length; y++){	
+				row.unshift(this.shape[y][x]);				
+			}
+			newShape.push(row);
+		}
+		this.shape = newShape;
+	}
+  canMoveRight() {
+    let canMove = true;
+    if (this.x == board.columns - this.getWidth()) {
+      return false;
+    }
+    let rightEdgeX = this.x + this.getWidth();
+    for (let i = 0; i < this.shape.length; i++) {
+      let rightEdgeY = this.y + i;
+      if (board.body[rightEdgeY][rightEdgeX] == 1) {
+        canMove = false;
+      }
+    }
+    return canMove;
+  }
+  canMoveLeft() {
+    let canMove = true;
+    if (this.x == 0) {
+      return false;
+    }
+    for (let i = 0; i < this.shape.length; i++) {
+      let leftEdgeY = this.y + i;
+      if (board.body[leftEdgeY][this.x - 1] == 1) {
+        canMove = false;
+      }
+    }
+    return canMove;
+  }
   moveDown() {
-    this.y = this.y + (CHUNKSIZE / FPS) * 10;
+    this.y = this.y + 1;
   }
   moveRight() {
-    this.x =
-      this.x < CANVAS_WIDTH - this.getWidth() ? (this.x += CHUNKSIZE) : this.x;
+    if (!this.canMoveRight()) {
+      return;
+    }
+    this.x = this.x + 1;
   }
 
   moveLeft() {
-    this.x = this.x >= CHUNKSIZE ? (this.x -= CHUNKSIZE) : this.x;
-  }
-
-  isActive() {
-    return this.getHeight() + this.y < CANVAS_HEIGHT;
-  }
-
-  update() {
-    if (this.isActive()) {
-      this.fallDown();
+    if (!this.canMoveLeft()) {
+      return;
     }
-  }
-
-  getCenterPoint() {
-    let centerX, centerY;
-    centerX = (2 * this.x + this.rowsX * CHUNKSIZE) / 2;
-    centerY = (2 * this.y + this.rowsY * CHUNKSIZE) / 2;
-    return { centerX, centerY };
+    this.x = this.x - 1;
+    // this.x = this.x <= 0 ? 0 : this.x - 1;
   }
 
   draw() {
@@ -60,10 +101,7 @@ class Piece extends Chunk {
         if (val == 0) {
           return;
         }
-
-        this.chunks.push(
-          new Chunk(this.x + indexX * CHUNKSIZE, this.y + indexY * CHUNKSIZE)
-        );
+        this.chunks.push(new Chunk(this.x + indexX, this.y + indexY));
       });
     });
 

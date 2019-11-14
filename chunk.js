@@ -6,21 +6,17 @@ class Chunk {
     this.active = true;
   }
 
-  getWidth() {    
-    return this.shape.length * CHUNKSIZE;
-  }
+  draw(color) {		
+		let xPos = this.x * board.blockSize;
+		let yPos = this.y * board.blockSize;
 
-  getHeight() {
-    return this.shape.length * CHUNKSIZE;    
-  }
+    drawBorder(xPos, yPos, board.blockSize, board.blockSize);
+		ctx.fillStyle = color ? color : "#FF0000";
+    ctx.fillRect(xPos , yPos, board.blockSize, board.blockSize);
 
-  draw(color) {
-    drawBorder(this.x, this.y, this.getWidth(), this.getHeight());
-    canvas.fillStyle = color ? color : "#FF0000";
-    canvas.fillRect(this.x, this.y, this.getWidth(), this.getHeight());
     function drawBorder(xPos, yPos, width, height, thickness = 1) {
-      canvas.fillStyle = "#fff";
-      canvas.fillRect(
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(
         xPos - thickness,
         yPos - thickness,
         width + thickness * 2,
