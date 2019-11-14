@@ -1,105 +1,84 @@
-/* ///////////////////////////////////////////////////////////////////////////////////////
-                                     Definitions    
-/////////////////////////////////////////////////////////////////////////////////////// */
+let board = new Board(30, [10, 20]);
+const CANVAS_WIDTH = board.blockSize * board.columns;
+const CANVAS_HEIGHT = board.blockSize * board.rows;
+const canvas = document.getElementById("gameScreen");
+const ctx = canvas.getContext("2d");
+ctx.canvas.width = CANVAS_WIDTH;
+ctx.canvas.height = CANVAS_HEIGHT;
+let GAMESTATE = 0;
+
+const STATE = {
+  end: 0,
+  run: 1,
+  pause: 2
+};
 const SHAPES = {
-  Oshape: [[1, 1], [1, 1]],
+  Oshape: [
+    [1, 1],
+    [1, 1]
+  ],
   Ishape: [[1], [1], [1], [1]],
-  Tshape: [[0, 1, 0], [1, 1, 1]],
-  Zshape: [[1, 1], [0, 1, 1]],
-  Sshape: [[0, 1, 1], [1, 1]],
+  Tshape: [
+    [0, 1, 0],
+    [1, 1, 1]
+  ],
+  Zshape: [
+    [1, 1],
+    [0, 1, 1]
+  ],
+  Sshape: [
+    [0, 1, 1],
+    [1, 1]
+  ],
   Lshape: [[1], [1], [1, 1]],
-  Jshape: [[0, 1], [0, 1], [1, 1]]
+  Jshape: [
+    [0, 1],
+    [0, 1],
+    [1, 1]
+  ]
 };
 
-function initGame() {
-  $(document).ready(function() {
-    $(".game-window").append(canvasElement);
-  });
+function printPauseText() {
+  ctx.font = "30px Arial";
+  ctx.fillStyle = "black";
+  ctx.textAlign = "center";
+  ctx.fillText("Pause", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
 }
-function watchKeyboardInput() {
-  $(document).keydown(function(e) {
-    keys[e.keyCode] = true;
-  });
-  $(document).keyup(function(e) {
-    delete keys[e.keyCode];
-    repeat = false;
-  });
+function printGameEndText() {
+  ctx.font = "30px Arial";
+  ctx.fillStyle = "black";
+  ctx.textAlign = "center";
+  ctx.fillText("GAME OVER", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - 45);
+  ctx.fillText("Press", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - 15);
+  ctx.fillText("SPACEBAR", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 15);
+  ctx.fillText("to start again", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 45);
 }
 
-function movePiece() {
-  for (var direction in keys) {
-    if (!keys.hasOwnProperty(direction)) continue;
-    if (direction == 65) {
-      if (!repeat) {
-        repeat = true;
-        console.log("A");
-        activePiece.moveLeft();
-      }
-    }
-    if (direction == 87) {
-      console.log("W");
-    }
-    if (direction == 68) {
-      console.log("D");
-      if (!repeat) {
-        repeat = true;
-        activePiece.moveRight();
-      }
-    }
-    if (direction == 83) {
-      console.log("S");
-      activePiece.moveDown();
-    }
-    if (direction == 69) {
-    }
+function handleGameState() {
+  if (GAMESTATE == STATE.over) {
   }
+}
+
+function timestamp() {
+  return new Date().getTime();
 }
 
 function clear() {
-  canvas.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 }
 
-function update() {
-  updatePiece();
-  activePiece.update();
-  movePiece();
-}
-function draw() {
-  floor.forEach(piece => {
-    piece.draw();
-  });
-  activePiece.draw();
-}
+function watch() {
+  if (board.activePieceExist) {
+    if (!activePiece.canMoveDown()) {
+      board.body[activePiece.y][activePiece.x] = 1;
 
-function collides(a, b) {
-  return (
-    a.x < b.x + b.width &&
-    a.x + a.width > b.x &&
-    a.y < b.y + b.height &&
-    a.y + a.height > b.y
-  );
-}
-
-function handleCollisions() {}
-
-function spawnNextPiece() {
-  if (Math.floor(Math.random() * 11) < 5) {
-    shape = SHAPES.Lshape;
-  } else {
-    shape = SHAPES.Jshape;
+      board.map(activePiece);
+      board.activePieceExist = false;
+    }
   }
-  return shape;
-}
+  if (!board.activePieceExist) {
+    activePiece = new Piece(0, 0, SHAPES.Tshape);
 
-let existActivePiece = false;
-function updatePiece() {
-  if (!existActivePiece) {
-    activePiece = new Piece(40, 0, spawnNextPiece());
-    existActivePiece = true;
-  }
-
-  if (!activePiece.isActive()) {
-    floor.push(...activePiece.chunks);
-    existActivePiece = false;
+    board.activePieceExist = true;
   }
 }

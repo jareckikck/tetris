@@ -4,26 +4,39 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Tetris</title>
-    <meta
-      name="description"
-      content="logika - zareaguj na input; fizyki  - policz kolizje; grafika - rysuj; player.js, enemy.js, bullet.js, game.js"
-    />
+    <title>Tetris 2</title>
+    <meta name="description" />
     <link rel="stylesheet" type="text/css" href="assets/css/main.css" />
-
-    <script src="jq.js"></script>
-    <script src="definitions.js"></script>
-    <script src="chunk.js"></script>
-    <script src="piece.js"></script>
-    <script src="stat.js"></script>
-    <script src="game.js"></script>
   </head>
-
-  <body class="game">
-    <div class="game-window"></div>
-
-    <!-- <div class="game-interface">
-
-    </div> -->
+  <style>
+    canvas {
+      border: 5px solid black;
+      background: repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 30px,
+          rgba(255, 255, 255, 0.3) 30px,
+          rgba(255, 255, 255, 0.3) 60px
+        ),
+        repeating-linear-gradient(
+          rgba(238, 238, 238, 0.9),
+          rgba(238, 238, 238, 0.9) 30px,
+          #ccc 30px,
+          #ccc 60px
+        );
+    }
+  </style>
+  <body>
+		<div>
+			<p>Press SPACEBAR to start/pause</p>
+			<p>Game controls: <br/>W,A,S,D</p>
+		</div>
+    <canvas id="gameScreen"></canvas>
   </body>
+	<script src="board.js"></script>
+  <script src="chunk.js"></script>
+  <script src="definitions.js"></script>
+  <script src="piece.js"></script>
+  <script src="keyboardHandler.js"></script>
+  <script src="gameLoop.js"></script>
 </html>
