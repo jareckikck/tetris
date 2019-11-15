@@ -46,6 +46,7 @@ function printPauseText() {
 }
 
 function printGameEndText() {
+  clear();
   ctx.font = "30px Arial";
   ctx.fillStyle = "black";
   ctx.textAlign = "center";
@@ -63,92 +64,98 @@ function clear() {
   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 }
 
-function randomShape(obj){	
-    var keys = Object.keys(obj)
-    return obj[keys[ keys.length * Math.random() << 0]];
+function randomShape(obj) {
+  var keys = Object.keys(obj);
+  return obj[keys[(keys.length * Math.random()) << 0]];
 }
 
-function spawnPieceFrom(SHAPES){
-	return new Piece(board.columns/2 - 1, 0, randomShape(SHAPES) )
-	// return new Piece(board.columns/2 - 1, 0, SHAPES.Ishape )
+function spawnPieceFrom(SHAPES) {
+  return new Piece(board.columns / 2 - 1, 0, randomShape(SHAPES));
+  // return new Piece(board.columns/2 - 1, 0, SHAPES.Ishape )
 }
 
 function watch() {
   if (board.activePieceExist) {
-		
-    if (!activePiece.canMoveDown()) {			
+    if (!activePiece.canMoveDown()) {
       board.map(activePiece);
-			board.activePieceExist = false;
-			updateScore(10)
+      board.activePieceExist = false;
+      updateScore(10);
     }
-	}
-	
+  }
+
   if (!board.activePieceExist) {
     activePiece = spawnPieceFrom(SHAPES);
-		board.activePieceExist = true;
-		if(isGameOver()){
-			console.log(isGameOver());
-			reset();
-		}
+    board.activePieceExist = true;
+    if (isGameOver()) {
+      reset();
+    }
   }
 }
 
 function watchKeybord() {
   if (rightPressed) {
     activePiece.moveRight();
-	}
-	
+  }
+
   if (leftPressed) {
     activePiece.moveLeft();
-	}
-	
+  }
+
   if (upPressed) {
     activePiece.rotate();
   }
 }
-function save(){	
-	boardState = JSON.stringify(board.body);
-	localStorage.setItem('boardState', boardState)
-	// localStorage.setItem('currentScore', score)
-	GAMESTATE = 2;
-	document.activeElement.blur()
+function save() {
+  boardState = JSON.stringify(board.body);
+  localStorage.setItem("boardState", boardState);
+  localStorage.setItem("currentScore", score);
+  savedPiece = JSON.stringify(activePiece);
+  localStorage.setItem("activePiece", savedPiece);
+  GAMESTATE = 2;
+  document.activeElement.blur();
 }
-function load(){	
-	boardState = localStorage.getItem('boardState');
-	board.body = JSON.parse(boardState);
-	score = localStorage.getItem('currentScore');
-	board.draw();
-	GAMESTATE = 2;
-	document.activeElement.blur()
+function load() {
+  board.body = JSON.parse(localStorage.getItem("boardState"));
+  loadedPiece = JSON.parse(localStorage.getItem("activePiece"));
+  activePiece = new Piece(loadedPiece.x, loadedPiece.y, loadedPiece.shape);
+  score = localStorage.getItem("currentScore");
+  let $current = document.getElementById("currentScore");
+  $current.innerHTML = score;
+
+  GAMESTATE = 2;
+  clear();
+  board.draw();
+  activePiece.draw();
+  document.activeElement.blur();
 }
 
-function reset(){
-	board.activePieceExist= false;
-	board.body = board.emptyBoard();	
-	board.draw();
-	score = 0;
-	document.activeElement.blur()
-	GAMESTATE = 0;
+function reset() {
+  board.activePieceExist = false;
+  board.body = board.emptyBoard();
+  board.draw();
+  score = 0;
+  document.activeElement.blur();
+  GAMESTATE = 0;
 }
 
-function updateScore(val){	
-	let $current = document.getElementById('currentScore');
-	const $best = document.getElementById('bestScore');
-	score = score + val;
-	$current.innerHTML = score;
-	if(score > bestScore || bestScore == null ){
-		localStorage.setItem('bestScore', score);
-	}
-	if(localStorage.getItem('bestScore')){
-		$best.innerHTML = localStorage.getItem('bestScore');
-	}
+function updateScore(val) {
+  let $current = document.getElementById("currentScore");
+  const $best = document.getElementById("bestScore");
+
+  score = parseInt(score) + parseInt(val);
+  $current.innerHTML = score;
+  if (score > bestScore || bestScore == null) {
+    localStorage.setItem("bestScore", score);
+  }
+  if (localStorage.getItem("bestScore")) {
+    $best.innerHTML = localStorage.getItem("bestScore");
+  }
 }
-function isGameOver(){	
-	bestScore = localStorage.getItem('bestScore');
-	
-	
-	return board.body[0].some(e => e == 1 );
+function isGameOver() {
+  bestScore = localStorage.getItem("bestScore");
+
+  return board.body[0].some(e => e == 1);
 }
-function resetBestScore(){
-	localStorage.setItem('bestScore',0);
+function resetBestScore() {
+  localStorage.setItem("bestScore", 0);
 }
