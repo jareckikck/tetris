@@ -2,6 +2,9 @@
 // GAME LOOP
 //-------------------------------------------------------------------------
 window.onload = function() {
+	let lastFrame = 0;
+  let delta = 0;
+	let timestep = 10000 / 60;
 	
 	function update() {
     watch();
@@ -14,17 +17,13 @@ window.onload = function() {
     activePiece.draw();
     board.draw();
   }
-
-  let lastFrame = 0;
-  let delta = 0;
-  let timestep = 10000 / 60;
+  
   function mainLoop(timestamp) {
-    var numUpdateSteps = 0;
+    let numUpdateSteps = 0;
     delta += timestamp - lastFrame;
-    lastFrame = timestamp;
+		lastFrame = timestamp;
+		
     while (delta >= timestep) {
-      handleGameState();
-
       if (GAMESTATE == STATE.run) {
         watchKeybord();
         update();

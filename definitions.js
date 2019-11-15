@@ -6,7 +6,6 @@ const ctx = canvas.getContext("2d");
 ctx.canvas.width = CANVAS_WIDTH;
 ctx.canvas.height = CANVAS_HEIGHT;
 let GAMESTATE = 0;
-
 const STATE = {
   end: 0,
   run: 1,
@@ -44,6 +43,7 @@ function printPauseText() {
   ctx.textAlign = "center";
   ctx.fillText("Pause", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
 }
+
 function printGameEndText() {
   ctx.font = "30px Arial";
   ctx.fillStyle = "black";
@@ -54,11 +54,6 @@ function printGameEndText() {
   ctx.fillText("to start again", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 45);
 }
 
-function handleGameState() {
-  if (GAMESTATE == STATE.over) {
-  }
-}
-
 function timestamp() {
   return new Date().getTime();
 }
@@ -67,18 +62,39 @@ function clear() {
   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 }
 
+function randomShape(obj){	
+    var keys = Object.keys(obj)
+    return obj[keys[ keys.length * Math.random() << 0]];
+}
+
+function spawnPieceFrom(SHAPES){
+	return new Piece(board.columns/2 - 1, 0, randomShape(SHAPES) )
+}
+
 function watch() {
   if (board.activePieceExist) {
-    if (!activePiece.canMoveDown()) {
-      board.body[activePiece.y][activePiece.x] = 1;
-
+    if (!activePiece.canMoveDown()) {			
       board.map(activePiece);
       board.activePieceExist = false;
     }
-  }
+	}
+	
   if (!board.activePieceExist) {
-    activePiece = new Piece(0, 0, SHAPES.Tshape);
-
+    activePiece = spawnPieceFrom(SHAPES);
     board.activePieceExist = true;
+  }
+}
+
+function watchKeybord() {
+  if (rightPressed) {
+    activePiece.moveRight();
+	}
+	
+  if (leftPressed) {
+    activePiece.moveLeft();
+	}
+	
+  if (upPressed) {
+    activePiece.rotate();
   }
 }
