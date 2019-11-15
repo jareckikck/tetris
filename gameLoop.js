@@ -2,31 +2,42 @@
 // GAME LOOP
 //-------------------------------------------------------------------------
 window.onload = function() {
+
+	let lastFrame = 0;
+  let delta = 0;
+	let FPS = 1000 / 600;
 	
 	function update() {
     watch();
-    board.updateLines();
-    activePiece.moveDown();
+    board.updateLines();		
     clear();
   }
- 
+	
 	function draw() {
-    activePiece.draw();
+		if(activePiece){
+			activePiece.draw();
+		}
     board.draw();
-  }
-
-  let lastFrame = 0;
-  let delta = 0;
-  let timestep = 10000 / 60;
+	}
+		setInterval(() => {
+			if (GAMESTATE == STATE.run) {
+			watchKeybord();
+			}
+		}, 100);
+		setInterval(() => {
+			if (GAMESTATE == STATE.run) {
+				if(activePiece){
+					activePiece.moveDown();
+				}
+			}
+		}, 200);
   function mainLoop(timestamp) {
-    var numUpdateSteps = 0;
+    let numUpdateSteps = 0;
     delta += timestamp - lastFrame;
-    lastFrame = timestamp;
-    while (delta >= timestep) {
-      handleGameState();
-
-      if (GAMESTATE == STATE.run) {
-        watchKeybord();
+		lastFrame = timestamp;
+		
+    while (delta >= FPS) {
+      if (GAMESTATE == STATE.run) {        
         update();
         draw();
       } else if (GAMESTATE == STATE.pause) {
@@ -34,7 +45,7 @@ window.onload = function() {
       } else if (GAMESTATE == STATE.end) {
         printGameEndText();
       }
-      delta -= timestep;
+      delta -= FPS;
 
       if (++numUpdateSteps >= 240) {
         delta = 0;

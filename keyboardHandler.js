@@ -15,15 +15,21 @@ document.addEventListener("keyup", keyUpHandler, false);
 
 function keyDownHandler(event) {
   if (event.keyCode == KEYBOARD.right) {
-		rightPressed = true;
-  } else if (event.keyCode == KEYBOARD.left) {
-		leftPressed = true;
+    rightPressed = true;
   }
+
+  if (event.keyCode == KEYBOARD.left) {
+    leftPressed = true;
+  }
+
   if (event.keyCode == KEYBOARD.down) {
     downPressed = true;
-  } else if (event.keyCode == KEYBOARD.up) {
+  }
+
+  if (event.keyCode == KEYBOARD.up) {
     upPressed = true;
   }
+
   if (event.keyCode == KEYBOARD.space) {
     spacePressed = true;
   }
@@ -31,27 +37,21 @@ function keyDownHandler(event) {
 function keyUpHandler(event) {
   if (event.keyCode == KEYBOARD.right) {
 		rightPressed = false;
-  } else if (event.keyCode == KEYBOARD.left) {
-		leftPressed = false;
   }
+
+  if (event.keyCode == KEYBOARD.left) {
+    leftPressed = false;
+  }
+
   if (event.keyCode == KEYBOARD.down) {
-    downPressed = false;
-  } else if (event.keyCode == KEYBOARD.up) {
-    upPressed = false;
+		downPressed = false;
+  }
+
+  if (event.keyCode == KEYBOARD.up) {
+		upPressed = false;
   }
   if (event.keyCode == KEYBOARD.space) {
     spacePressed = false;
     GAMESTATE = GAMESTATE !== 1 ? 1 : 2;
   }
-}
-function watchKeybord() {
-  if (rightPressed) {
-    activePiece.moveRight();
-  }
-  if (leftPressed) {
-    activePiece.moveLeft();
-	}
-	if(upPressed){
-		activePiece.rotate();
-	}
 }

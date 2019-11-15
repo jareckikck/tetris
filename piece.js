@@ -6,15 +6,13 @@ class Piece extends Chunk {
       [1, 1]
     ];
     this.chunks;
-  }
+	}
+	
   getWidth() {
     let width = 0;
     let current = 0;
     this.shape.forEach(el => {
-      el.forEach(v => {
-        if (v == 0) return;
-        current++;
-      });
+      current = el.length;
       if (current < width) return;
       width = current;
       current = 0;
@@ -22,32 +20,44 @@ class Piece extends Chunk {
     return width;
   }
 
-  canMoveDown() {
+  canMoveDown() {  
     let canMove = true;
-    if (this.y == board.rows - this.shape.length) {
-      return false;
-    }
 
-    let bottomY = this.y + this.shape.length;
     for (let i = 0; i < this.shape.length; i++) {
-      let bottomX = this.x + i;
-      if (board.body[bottomY][bottomX] == 1) {
-        canMove = false;
+      let bottomY = this.y + i;
+
+      for (let j = 0; j < this.getWidth(); j++) {
+        let bottomX = this.x + j;
+
+        if (board.body[bottomY + 1] == undefined) {
+          return false;
+        }
+        if (board.body[bottomY + 1][bottomX] == 1 && this.shape[i][j] == 1) {
+          canMove = false;
+        }
       }
     }
     return canMove;
 	}
-	rotate(){
-		let newShape = []
-		for(let x = 0; x < this.getWidth(); x++){
-			let row = []
-			for(let y = 0; y < this.shape.length; y++){	
-				row.unshift(this.shape[y][x]);				
-			}
-			newShape.push(row);
-		}
-		this.shape = newShape;
-	}
+	
+  rotate() {
+    let newShape = [];
+    if (!this.canMoveRight() && this.getWidth() < this.shape.length) {
+			this.x = board.columns - this.shape.length;
+		
+    }
+
+    for (let x = 0; x < this.getWidth(); x++) {
+      let row = [];
+      for (let y = 0; y < this.shape.length; y++) {
+        row.unshift(this.shape[y][x]);
+      }
+      newShape.push(row);
+    }
+
+    this.shape = newShape;
+  }
+
   canMoveRight() {
     let canMove = true;
     if (this.x == board.columns - this.getWidth()) {
@@ -62,6 +72,7 @@ class Piece extends Chunk {
     }
     return canMove;
   }
+
   canMoveLeft() {
     let canMove = true;
     if (this.x == 0) {
@@ -75,9 +86,11 @@ class Piece extends Chunk {
     }
     return canMove;
   }
+
   moveDown() {
     this.y = this.y + 1;
   }
+
   moveRight() {
     if (!this.canMoveRight()) {
       return;
@@ -90,7 +103,6 @@ class Piece extends Chunk {
       return;
     }
     this.x = this.x - 1;
-    // this.x = this.x <= 0 ? 0 : this.x - 1;
   }
 
   draw() {
@@ -98,13 +110,12 @@ class Piece extends Chunk {
 
     this.shape.forEach((rowY, indexY) => {
       rowY.forEach((val, indexX) => {
-        if (val == 0) {
+        if (val == 0 || val == undefined) {
           return;
         }
         this.chunks.push(new Chunk(this.x + indexX, this.y + indexY));
       });
     });
-
     this.chunks.forEach(chunk => {
       chunk.draw();
     });
