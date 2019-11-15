@@ -5,6 +5,7 @@ const canvas = document.getElementById("gameScreen");
 const ctx = canvas.getContext("2d");
 ctx.canvas.width = CANVAS_WIDTH;
 ctx.canvas.height = CANVAS_HEIGHT;
+let score = 0;
 let GAMESTATE = 0;
 const STATE = {
   end: 0,
@@ -74,15 +75,21 @@ function spawnPieceFrom(SHAPES){
 
 function watch() {
   if (board.activePieceExist) {
+		
     if (!activePiece.canMoveDown()) {			
       board.map(activePiece);
-      board.activePieceExist = false;
+			board.activePieceExist = false;
+			updateScore(10)
     }
 	}
 	
   if (!board.activePieceExist) {
     activePiece = spawnPieceFrom(SHAPES);
-    board.activePieceExist = true;
+		board.activePieceExist = true;
+		if(isGameOver()){
+			console.log(isGameOver());
+			reset();
+		}
   }
 }
 
@@ -98,4 +105,50 @@ function watchKeybord() {
   if (upPressed) {
     activePiece.rotate();
   }
+}
+function save(){	
+	boardState = JSON.stringify(board.body);
+	localStorage.setItem('boardState', boardState)
+	// localStorage.setItem('currentScore', score)
+	GAMESTATE = 2;
+	document.activeElement.blur()
+}
+function load(){	
+	boardState = localStorage.getItem('boardState');
+	board.body = JSON.parse(boardState);
+	score = localStorage.getItem('currentScore');
+	board.draw();
+	GAMESTATE = 2;
+	document.activeElement.blur()
+}
+
+function reset(){
+	board.activePieceExist= false;
+	board.body = board.emptyBoard();	
+	board.draw();
+	score = 0;
+	document.activeElement.blur()
+	GAMESTATE = 0;
+}
+
+function updateScore(val){	
+	let $current = document.getElementById('currentScore');
+	const $best = document.getElementById('bestScore');
+	score = score + val;
+	$current.innerHTML = score;
+	if(score > bestScore || bestScore == null ){
+		localStorage.setItem('bestScore', score);
+	}
+	if(localStorage.getItem('bestScore')){
+		$best.innerHTML = localStorage.getItem('bestScore');
+	}
+}
+function isGameOver(){	
+	bestScore = localStorage.getItem('bestScore');
+	
+	
+	return board.body[0].some(e => e == 1 );
+}
+function resetBestScore(){
+	localStorage.setItem('bestScore',0);
 }

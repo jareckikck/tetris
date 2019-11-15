@@ -25,13 +25,35 @@
           #ccc 60px
         );
     }
+		#scoreboard{
+			/* border: 1px solid black; */
+			padding: 10px;
+			height: 300px;
+			width: 300px;
+			margin-left: 15px;
+		}
+		body{
+			display: flex;
+			flex-wrap: wrap;
+		}
+
+		#resetBestScore{
+			margin-top: 10px;
+		}
   </style>
   <body>
-		<div>
+		
+		<canvas id="gameScreen"></canvas>
+		<div id="scoreboard">			
 			<p>Press SPACEBAR to start/pause</p>
 			<p>Game controls: <br/>W,A,S,D</p>
+			<p>Current score: <span id="currentScore">0</span></p>
+			<p>Best score: <span id="bestScore">0</span></p>
+			<button id="reset"onclick="reset()">Reset</button>
+			<button id="Save" onclick="save()">Save</button>
+			<button id="Load" onclick="load()">Load</button>
+			<button id="resetBestScore" onclick="resetBestScore()">Reset best Score</button>
 		</div>
-    <canvas id="gameScreen"></canvas>
   </body>
 	<script src="board.js"></script>
   <script src="chunk.js"></script>

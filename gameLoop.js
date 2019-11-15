@@ -2,42 +2,42 @@
 // GAME LOOP
 //-------------------------------------------------------------------------
 window.onload = function() {
+
 	let lastFrame = 0;
   let delta = 0;
-	let FPS = 1000 / 60;
+	let FPS = 1000 / 600;
 	
 	function update() {
     watch();
-    board.updateLines();
-    
+    board.updateLines();		
     clear();
   }
 	
 	function draw() {
-    activePiece.draw();
+		if(activePiece){
+			activePiece.draw();
+		}
     board.draw();
 	}
-	// if (GAMESTATE == STATE.run) {
 		setInterval(() => {
 			if (GAMESTATE == STATE.run) {
-			console.log('tick tack');
 			watchKeybord();
 			}
 		}, 100);
 		setInterval(() => {
 			if (GAMESTATE == STATE.run) {
-			activePiece.moveDown();
+				if(activePiece){
+					activePiece.moveDown();
+				}
 			}
 		}, 200);
-	// }
   function mainLoop(timestamp) {
     let numUpdateSteps = 0;
     delta += timestamp - lastFrame;
 		lastFrame = timestamp;
 		
     while (delta >= FPS) {
-      if (GAMESTATE == STATE.run) {
-        
+      if (GAMESTATE == STATE.run) {        
         update();
         draw();
       } else if (GAMESTATE == STATE.pause) {

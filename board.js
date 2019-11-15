@@ -3,11 +3,11 @@ class Board {
     this.blockSize = blockSize;
     this.columns = size[0];
     this.rows = size[1];
-    this.body = Array.from(Array(this.rows), e => this.newLine());
+    this.body = this.emptyBoard();
     this.activePieceExist = false;
   }
 	newLine = () => Array.from(Array(this.columns), e => 0);
-	
+	emptyBoard = () => Array.from(Array(this.rows), e => this.newLine())
   map(piece) {		
     for (let countY = 0; countY < piece.shape.length; countY++) {
       for (let countX = 0; countX < piece.getWidth(); countX++) {
@@ -33,9 +33,13 @@ class Board {
 	}
 	
   updateLines() {
-    this.body = this.body.filter(e => !e.every(v => v == 1));
+		this.body = this.body.filter(e => !e.every(v => v == 1));
+		let lines = 0
     while (this.body.length < this.rows) {
-      this.body.unshift(this.newLine());
-    }
+			this.body.unshift(this.newLine());
+			lines++;
+		}
+		let addScore = lines*100;
+		updateScore(addScore);
   }
 }
