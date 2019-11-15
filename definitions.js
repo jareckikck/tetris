@@ -69,6 +69,7 @@ function randomShape(obj){
 
 function spawnPieceFrom(SHAPES){
 	return new Piece(board.columns/2 - 1, 0, randomShape(SHAPES) )
+	// return new Piece(board.columns/2 - 1, 0, SHAPES.Ishape )
 }
 
 function watch() {

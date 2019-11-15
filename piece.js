@@ -43,7 +43,8 @@ class Piece extends Chunk {
   rotate() {
     let newShape = [];
     if (!this.canMoveRight() && this.getWidth() < this.shape.length) {
-      this.x = this.x - 1;
+			this.x = board.columns - this.shape.length;
+		
     }
 
     for (let x = 0; x < this.getWidth(); x++) {
